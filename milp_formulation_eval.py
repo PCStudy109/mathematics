@@ -77,10 +77,6 @@ def solve_problem(type, size):
 
     print(f"maximum = {max_val}, index = {max_idx}")
 
-    print(f"coefficient c[i]: ")
-    for i in I:
-        print(f"c[{i}] = {c[i]},  ", end="")
-
     m: pyscipopt.Model = pyscipopt.Model(
         problemName = type,
     )
@@ -111,22 +107,32 @@ def solve_problem(type, size):
         m = add_constraint_ideal(m, x, y, I)
     elif type == "sharp":
         m = add_constraint_sharp(m, x, y, I)
+    elif type == "none":
+        start_time = time.time()
+        max_val = -10
+        max_idx = -1
+        for i in I:
+            if max_val < c[i]:
+                max_idx = i
+                max_val = c[i]
+        print("Optimization Time = %s seconds ---" % (time.time() - start_time))
 
-    time_start: float = time.perf_counter()
-    m.optimize()
-    time_stop: float = time.perf_counter()
+    if type != "none":
+        time_start: float = time.perf_counter()
+        m.optimize()
+        time_stop: float = time.perf_counter()
 
-    print(f"Status = {m.getStatus()}, ", end="")
-    print(f"Objective Value = {m.getObjVal()}, ", end="")
-    print(f"Optimization Time = {time_stop - time_start:.3f} (sec)")
-    print(f"Solution x[i]: ")
-    for i in I:
-        if m.getVal(x[i]) != 0:
-            print(f"{x[i]} = {m.getVal(x[i])},  ", end="")
-    print(f"")
-
-    return m
+        print(f"Status = {m.getStatus()}, ", end="")
+        print(f"Objective Value = {m.getObjVal()}, ", end="")
+        print(f"Optimization Time = {time_stop - time_start:.3f} (sec)")
+        print(f"Solution x[i]: ")
+        for i in I:
+            if m.getVal(x[i]) != 0:
+                print(f"{x[i]} = {m.getVal(x[i])},  ", end="")
+        print(f"")
+        return m
 
 solve_problem("simple", 1000)
 solve_problem("ideal", 1000)
 solve_problem("sharp", 17)
+solve_problem("none", 1000000)

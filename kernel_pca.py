@@ -60,13 +60,12 @@ wine = load_wine()
 
 fig = plt.figure(figsize = (12,5))
 fig.subplots_adjust(wspace = 0.5)
-ax1 = fig.add_subplot(1,2,1, projection = '3d')
 
 colors = ['red', 'green', 'blue']
 
-dimension = 10
+dimension = 12
 datanum = 178
-sigma = 2
+sigma = 1.5
 
 #print(wine)
 

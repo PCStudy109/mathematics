@@ -13,14 +13,12 @@ def rbf_total_product(X, sigma):
     v = 0.0
     l1 = range(0, X.shape[0])
     for i, j in itertools.product(l1, l1):
-        v = 0
         v += rbf_innerproduct(X[i], X[j], sigma)
     return v
 
 def rbf_oneside_product(X, idx, sigma):
     v = 0.0
     for i in range(0, X.shape[0]):
-        v = 0.0
         v += rbf_innerproduct(X[idx], X[i], sigma)
     return v
 
@@ -71,7 +69,7 @@ colors = ['red', 'green', 'blue']
 
 dimension = 12
 datanum = 178
-sigma = 1.5
+sigma = 2
 
 #print(wine)
 

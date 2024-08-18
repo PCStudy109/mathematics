@@ -24,22 +24,28 @@ def rbf_oneside_product(X, idx, sigma):
         v += rbf_innerproduct(X[idx], X[i], sigma)
     return v
 
-def rbfpca_innerproduct(X, i, j, sigma, total_product):
+def rbfpca_innerproduct(X, i, j, sigma, oneside_products, total_product):
     v = 0.0
     v += rbf_innerproduct(X[i], X[j], sigma)
-    v -= rbf_oneside_product(X, i, sigma) / X.shape[0]
-    v -= rbf_oneside_product(X, j, sigma) / X.shape[0]
+    v -= oneside_products[i]
+    v -= oneside_products[j]
     v += total_product
     return v
 
 def rbfpca_gram(X, sigma):
     #print(X.shape[0])
     total_product = rbf_total_product(X, sigma) / (X.shape[0] * X.shape[0])
+    oneside_products = []
+    for i in range(0, X.shape[0]):
+        oneside_products.append(rbf_oneside_product(X, i, sigma) / X.shape[0])        
+
     gram = np.empty((0, X.shape[0]), float)
     for i in range(0, X.shape[0]):
         arr = np.zeros(0)
         for j in range(0, X.shape[0]):
-            arr = np.append(arr, rbfpca_innerproduct(X, i, j, sigma, total_product))
+            arr = np.append(arr, rbfpca_innerproduct(X, i, j, sigma,
+                                                     oneside_products,
+                                                     total_product))
         gram = np.append(gram, np.array([arr]), axis = 0)
     return gram
 
